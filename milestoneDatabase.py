@@ -1,6 +1,7 @@
 import json
 import os
 import pandas
+import csv
 
 from google.cloud.sql.connector import connector
 
@@ -47,7 +48,7 @@ def setup_db(cur):
         duration    INT,
         release_year    INT,
         PRIMARY KEY(movie_id)
-        );
+        
         ''')
 
     # cur.execute('''CREATE TABLE Country (
@@ -79,14 +80,24 @@ def setup_db(cur):
 def insert_data(cur):
     cur.execute('USE movies_db')
 
-    df = pandas.read_csv('IMDB_movies.csv')
-    movie_title = df["title"]
-    duration = df["duration"]
-    release_year = df["year"]
 
-    cur.execute('''INSERT INTO Movies (movie_title, duration, release_year)  
-            VALUES ( %s, %s, %s )''', (movie_title.head(2), int(duration.head(2)), int(release_year.head(2))))
-#release_date.head(1)
+    #df = pandas.read_csv('IMDB_movies.csv', low_memory=False)
+    # for row in df:
+    #     movie_title = df["title"]
+    #     duration = df["duration"]
+    #     release_year = df["year"]
+
+
+    # cur.execute('''INSERT INTO Movies (movie_title, duration, release_year)
+    #         VALUES ( %s, %s, %s )''', ('your mom', int(duration.head(1)), int(2021)))
+
+#movie_title.head(row + 1
+#duration.head(row + 1)
+#release_year.head(row + 1)
+
+
+
+
 
 cnx = make_connection()
 cur = cnx.cursor()
