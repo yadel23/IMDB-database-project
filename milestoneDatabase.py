@@ -48,13 +48,14 @@ def setup_db(cur):
         duration    INT,
         release_year    INT,
         PRIMARY KEY(movie_id)
-        
+        );
         ''')
 
     # cur.execute('''CREATE TABLE Country (
     #     country_id      INT NOT NULL AUTO_INCREMENT,
     #     country_title   VARCHAR(120) NOT NULL,
-    #     PRIMARY KEY(country_id);
+    #     PRIMARY KEY(country_id)
+    #     );
     #     ''')
     #
     # cur.execute('''CREATE TABLE Director (
@@ -80,23 +81,30 @@ def setup_db(cur):
 def insert_data(cur):
     cur.execute('USE movies_db')
 
+    with open('IMDb_movies.csv', 'r', encoding='utf8') as csv_database:
+        reader = csv.reader(csv_database)
+        header = next(reader)
+        cnt = 0
+        if header != None:
+            for row in reader:
+                movie_title = row[1]
+                duration = row[6]
+                release_year = row[3]
 
-    #df = pandas.read_csv('IMDB_movies.csv', low_memory=False)
-    # for row in df:
-    #     movie_title = df["title"]
-    #     duration = df["duration"]
-    #     release_year = df["year"]
+                cur.execute('''INSERT INTO Movies (movie_title, duration, release_year)
+                     VALUES ( %s, %s, %s )''', (movie_title, int(duration), int(release_year)))
+                cnt+=1
+                if(cnt > 100):
+                    break
 
 
+    # df = pandas.read_csv('IMDB_movies.csv')
+    # movie_title = df["title"]
+    # duration = df["duration"]
+    # release_year = df["year"]
+    #
     # cur.execute('''INSERT INTO Movies (movie_title, duration, release_year)
-    #         VALUES ( %s, %s, %s )''', ('your mom', int(duration.head(1)), int(2021)))
-
-#movie_title.head(row + 1
-#duration.head(row + 1)
-#release_year.head(row + 1)
-
-
-
+    #         VALUES ( %s, %s, %s )''', (movie_title.head(1), int(duration.head(1)), int(release_year.head(1))))
 
 
 cnx = make_connection()
@@ -117,7 +125,19 @@ print("FINISHED")
 
 
 
+#df = pandas.read_csv('IMDB_movies.csv', low_memory=False)
+# for row in df:
+#     movie_title = df["title"]
+#     duration = df["duration"]
+#     release_year = df["year"]
 
+
+# cur.execute('''INSERT INTO Movies (movie_title, duration, release_year)
+#         VALUES ( %s, %s, %s )''', ('your mom', int(duration.head(1)), int(2021)))
+
+#movie_title.head(row + 1
+#duration.head(row + 1)
+#release_year.head(row + 1)
 
 
 #
